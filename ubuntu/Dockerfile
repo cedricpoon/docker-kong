@@ -39,7 +39,11 @@ RUN set -ex \
     && ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx \
     && if [ "$ASSET" = "ce" ] ; then \
       kong version ; \
-    fi
+    fi; \
+    # Install OpenSSL for luacrypto
+    apt-get install openssl libssl-dev -y \
+    # Install luacrypto
+    && luarocks install luacrypto
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
