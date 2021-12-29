@@ -40,10 +40,15 @@ RUN set -ex \
     && if [ "$ASSET" = "ce" ] ; then \
       kong version ; \
     fi; \
-    # Install OpenSSL for luacrypto
-    apt-get install openssl libssl-dev -y \
-    # Install luacrypto
-    && luarocks install luacrypto
+    apt-get update \
+    && apt-get upgrade -y \
+    # Install dependencies for luacrypto
+    && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install openssl libssl-dev gcc lua5.1-dev -y
+
+USER root
+
+RUN luarocks install luaossl \
+    && luarocks install luacrypto2
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
